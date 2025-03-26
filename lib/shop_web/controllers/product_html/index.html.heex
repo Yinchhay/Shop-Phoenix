@@ -1,0 +1,9 @@
+<h1>This is product listing page!</h1>
+<p :if={@promo}>you have a promotional code </p>
+
+<p class="mt-8">Selected console: <%= @console %></p>
+
+<a href={~p"/?#{[console: "xbox", admin: true]}"}> Go Back to home page</a>
+
+<.product :for={product <- @products} name={product.name} />
+

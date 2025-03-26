@@ -1,23 +1,37 @@
 defmodule ShopWeb.Router do
   use ShopWeb, :router
 
+  alias ShopWeb.Plugs
+
   pipeline :browser do
-    plug :accepts, ["html"]
+    plug :accepts, ["html", "json"]
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, html: {ShopWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Plugs.SetConsole
   end
 
   pipeline :api do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug Plugs.EnsureAuthenticated
+  end
+
   scope "/", ShopWeb do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/products", ProductController, :index
+    get "/products/:id", ProductController, :show
+
+    # resources "/users", UserController do
+    #   get "/posts", PostController, :index
+    # end
+
   end
 
   # Other scopes may use custom stacks.
